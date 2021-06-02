@@ -2,8 +2,8 @@ import random
 
 import gmpy2
 
-import cryptopy.diemitko as dk
-import cryptopy.utils as utils
+from cryptopy import diemitko as dk
+from cryptopy import utils
 
 
 def gen_keys(num_digits: int = 120) -> tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz]:
