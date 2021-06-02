@@ -1,5 +1,7 @@
 import gmpy2
 
+from cryptopy import pyecm
+
 
 def str_to_blocks(string: str, p: gmpy2.mpz) -> list[gmpy2.mpz]:
     blocks = []
@@ -31,3 +33,22 @@ def blocks_to_str(blocks: list[gmpy2.mpz]):
         buffer_bytes.clear()
 
     return string_bytes.decode("utf-8")
+
+
+def primitive_root(p: gmpy2.mpz) -> gmpy2.mpz:
+    phi = p - 1
+    factor_list = pyecm.factors(phi, False, False, 4, 1)
+
+    powers = []
+    for divider in factor_list:
+        powers.append(gmpy2.divexact(phi, divider))
+
+    for root in range(2, p):
+        flag = True
+        for power in powers:
+            if gmpy2.powmod(root, power, p) == 1:
+                flag = False
+                break
+
+        if flag and gmpy2.is_prime(root):
+            return root
