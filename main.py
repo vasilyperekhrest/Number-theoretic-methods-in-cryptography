@@ -1,4 +1,4 @@
-from cryptopy import diemitko
+from cryptopy import rsa
 
 
 def main():
