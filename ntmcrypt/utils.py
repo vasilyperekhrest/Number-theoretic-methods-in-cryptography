@@ -1,6 +1,6 @@
 import gmpy2
 
-from cryptopy import pyecm
+from ntmcrypt import pyecm
 
 
 def str_to_blocks(string: str, p: gmpy2.mpz) -> list[gmpy2.mpz]:
