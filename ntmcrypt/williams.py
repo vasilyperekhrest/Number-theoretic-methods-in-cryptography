@@ -6,7 +6,12 @@ from ntmcrypt import diemitko
 from ntmcrypt import utils
 
 
-def gen_keys(size: int = 128):
+def gen_keys(
+        size: int = 128
+) -> tuple[
+    tuple[int, int, int, int],
+    tuple[int, int, int, int]
+]:
     p = diemitko.prime_gen(size)
     q = diemitko.prime_gen(size)
     n = p * q
@@ -71,10 +76,10 @@ def encrypt(
 
 
 def decrypt(
-        encrypted_blocks: list,
-        private_keys: list,
-        me_pub_keys: list
-):
+        encrypted_blocks: list[tuple[int, int, int]],
+        private_keys: tuple[int, int, int, int],
+        me_pub_keys: tuple[int, int, int, int]
+) -> str:
     p, q, m, d = private_keys
     n, c, s, e = me_pub_keys
 
