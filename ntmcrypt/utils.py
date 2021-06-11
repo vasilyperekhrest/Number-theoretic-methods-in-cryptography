@@ -21,7 +21,7 @@ def str_to_blocks(string: str, p: gmpy2.mpz) -> list[gmpy2.mpz]:
     return blocks
 
 
-def blocks_to_str(blocks: list[gmpy2.mpz]):
+def blocks_to_str(blocks: list[gmpy2.mpz]) -> str:
     string_bytes = bytearray()
     buffer_bytes = bytearray()
 
@@ -55,19 +55,19 @@ def primitive_root(p: gmpy2.mpz) -> gmpy2.mpz:
             return root
 
 
-def sqrt_mod(a: int, p: int) -> int:
+def sqrt_mod(a: gmpy2.mpz, p: gmpy2.mpz) -> gmpy2.mpz:
     # Tonelli-Shanks
     if sympy.legendre_symbol(a, p) != 1:
-        return 0
+        return gmpy2.mpz()
     elif a == 0:
-        return 0
+        return gmpy2.mpz()
     elif p == 2:
-        return 0
+        return gmpy2.mpz()
     elif p % 4 == 3:
-        return pow(a, (p + 1) >> 2, p)
+        return gmpy2.powmod(a, (p + 1) >> 2, p)
 
     s = p - 1
-    e = 0
+    e = gmpy2.mpz()
     while s % 2 == 0:
         s >>= 1
         e += 1
@@ -76,9 +76,9 @@ def sqrt_mod(a: int, p: int) -> int:
     while sympy.legendre_symbol(n, p) != -1:
         n += 1
 
-    x = pow(a, (s + 1) >> 1, p)
-    b = pow(a, s, p)
-    g = pow(n, s, p)
+    x = gmpy2.powmod(a, (s + 1) >> 1, p)
+    b = gmpy2.powmod(a, s, p)
+    g = gmpy2.powmod(n, s, p)
     r = e
 
     while True:
@@ -89,12 +89,12 @@ def sqrt_mod(a: int, p: int) -> int:
             if t == 1:
                 break
 
-            t = pow(t, 2, p)
+            t = gmpy2.powmod(t, 2, p)
 
         if m == 0:
             return x
 
-        gs = pow(g, 2 ** (r - m - 1), p)
+        gs = gmpy2.powmod(g, 2 ** (r - m - 1), p)
         g = (gs * gs) % p
         x = (x * gs) % p
         b = (b * g) % p

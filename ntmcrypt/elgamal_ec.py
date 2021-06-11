@@ -14,8 +14,8 @@ def get_elliptic_curve(num: int = 1):
     return ec.EllipticCurve(*map(lambda x: gmpy2.mpz(x), consts.curves.get(num)))
 
 
-def gen_keys(curve: ec.EllipticCurve):
-    private_key = random.randint(1, curve.q)
+def gen_keys(curve: ec.EllipticCurve) -> tuple[gmpy2.mpz, point.Point, point.Point]:
+    private_key = gmpy2.mpz(random.randint(1, curve.q))
     g = curve.rand_point()
     public_key = g * private_key
     return private_key, public_key, g
@@ -26,10 +26,10 @@ def encrypt(
         curve: ec.EllipticCurve,
         other_pub_key: point.Point,
         g: point.Point
-):
-    k = random.randint(1, curve.q)
-    r = g * k
-    p = other_pub_key * k
+) -> tuple[point.Point, list[gmpy2.mpz]]:
+    k: gmpy2.mpz = gmpy2.mpz(random.randint(1, curve.q))
+    r: point.Point = g * k
+    p: point.Point = other_pub_key * k
 
     blocks = utils.str_to_blocks(string, curve.p)
     encrypted_blocks = []
@@ -44,9 +44,9 @@ def decrypt(
         r: point.Point,
         encrypted_blocks,
         curve: ec.EllipticCurve,
-        private_key: int
-):
-    q = r * private_key
+        private_key: gmpy2.mpz
+) -> str:
+    q: point.Point = r * private_key
 
     decrypted_blocks = []
 

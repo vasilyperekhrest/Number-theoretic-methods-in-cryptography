@@ -1,7 +1,11 @@
+import gmpy2
+
 from ntmcrypt import elgamal_ec
+import time
 
 
 def main():
+    a = time.time()
     curve = elgamal_ec.get_elliptic_curve(1)
     print(curve)
     print(curve.get_params())
@@ -27,6 +31,7 @@ def main():
     # A
     decrypted_message = elgamal_ec.decrypt(*encrypted_data, curve, pr_a)
     print(decrypted_message)
+    print(time.time() - a)
 
 
 if __name__ == '__main__':
