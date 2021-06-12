@@ -6,13 +6,13 @@ from ntmcrypt import diemitko
 from ntmcrypt import utils
 
 
-def gen_keys(size: int = 128):
+def gen_keys(size: int = 128) -> tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz, gmpy2.mpz]:
     p = diemitko.prime_gen(size)
     phi = p - 1
     g = utils.primitive_root(p)
 
     while True:
-        private_key = random.randint(1, phi)
+        private_key = gmpy2.mpz(random.randint(1, phi))
         if gmpy2.gcd(private_key, phi) == 1:
             break
 
@@ -21,7 +21,7 @@ def gen_keys(size: int = 128):
     return p, g, y, private_key
 
 
-def gen_session_key(other_p: gmpy2.mpz):
+def gen_session_key(other_p: gmpy2.mpz) -> gmpy2.mpz:
     phi = other_p - 1
 
     while True:
@@ -38,7 +38,7 @@ def encrypt(
         other_p: gmpy2.mpz,
         other_g: gmpy2.mpz,
         other_y: gmpy2.mpz
-):
+) -> tuple[list[gmpy2.mpz], gmpy2.mpz]:
     blocks = utils.str_to_blocks(string, other_p)
     b = gmpy2.powmod(other_y, session_key, other_p)
 
@@ -57,7 +57,7 @@ def decrypt(
         a: gmpy2.mpz,
         p: gmpy2.mpz,
         private_key: gmpy2.mpz
-):
+) -> str:
     m = gmpy2.powmod(a, p - 1 - private_key, p)
 
     decrypted_blocks = []

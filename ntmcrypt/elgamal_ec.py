@@ -8,7 +8,7 @@ from ntmcrypt.elliptic_curve import consts
 from ntmcrypt import utils
 
 
-def get_elliptic_curve(num: int = 1):
+def get_elliptic_curve(num: int = 1) -> ec.EllipticCurve:
     if not 0 < num < len(consts.curves):
         raise Exception(f"Error! Invalid elliptic curve index! (Try a range like this 0-{len(consts.curves)})")
     return ec.EllipticCurve(*map(lambda x: gmpy2.mpz(x), consts.curves.get(num)))
@@ -27,9 +27,9 @@ def encrypt(
         other_pub_key: point.Point,
         g: point.Point
 ) -> tuple[point.Point, list[gmpy2.mpz]]:
-    k: gmpy2.mpz = gmpy2.mpz(random.randint(1, curve.q))
-    r: point.Point = g * k
-    p: point.Point = other_pub_key * k
+    k = gmpy2.mpz(random.randint(1, curve.q))
+    r = g * k
+    p = other_pub_key * k
 
     blocks = utils.str_to_blocks(string, curve.p)
     encrypted_blocks = []
@@ -42,11 +42,11 @@ def encrypt(
 
 def decrypt(
         r: point.Point,
-        encrypted_blocks,
+        encrypted_blocks: list[gmpy2.mpz],
         curve: ec.EllipticCurve,
         private_key: gmpy2.mpz
 ) -> str:
-    q: point.Point = r * private_key
+    q = r * private_key
 
     decrypted_blocks = []
 

@@ -35,7 +35,7 @@ def prime_gen(
         if gmpy2.is_odd(n):
             n += 1
 
-        u = 0
+        u = gmpy2.mpz()
         while True:
             p = q*(n + u) + 1
 

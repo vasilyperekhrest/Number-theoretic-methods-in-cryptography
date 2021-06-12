@@ -6,9 +6,9 @@ from ntmcrypt import diemitko as dk
 from ntmcrypt import utils
 
 
-def gen_keys(num_digits: int = 120) -> tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz]:
-    p = dk.prime_gen(num_digits)
-    q = dk.prime_gen(num_digits)
+def gen_keys(size: int = 120) -> tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz]:
+    p = dk.prime_gen(size)
+    q = dk.prime_gen(size)
 
     n = p * q
     phi = (p-1) * (q-1)

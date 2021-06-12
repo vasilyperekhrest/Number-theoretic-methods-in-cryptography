@@ -15,6 +15,13 @@ class EllipticCurve:
             p: gmpy2.mpz,
             q: gmpy2.mpz
     ) -> None:
+        """
+
+        :param a:
+        :param b:
+        :param p:
+        :param q:
+        """
         if p < 4 or (4 * gmpy2.powmod(a, 3, p) + 27 * gmpy2.powmod(b, 2, p)) % p == 0:
             raise Exception("Error!\n"
                             "Parameter n must be greater than 3.\n"
@@ -56,10 +63,10 @@ class EllipticCurve:
     def get_params(self) -> Params:
         return Params(self.a, self.b, self.p, self.q)
 
-    def __str__(self) -> str:
+    def __str__(self):
         return f"y^2 = x^3 + {self.a}x + {self.b}"
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other):
         if self.a == other.a and \
                 self.b == other.b and \
                 self.p == other.p and \
@@ -68,7 +75,7 @@ class EllipticCurve:
         else:
             return False
 
-    def __ne__(self, other) -> bool:
+    def __ne__(self, other):
         if self == other:
             return False
         else:

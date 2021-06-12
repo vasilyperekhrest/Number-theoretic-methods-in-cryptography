@@ -9,14 +9,14 @@ from ntmcrypt import utils
 def gen_keys(
         size: int = 128
 ) -> tuple[
-    tuple[int, int, int, int],
-    tuple[int, int, int, int]
+    tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz, gmpy2.mpz],
+    tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz, gmpy2.mpz]
 ]:
     p = diemitko.prime_gen(size)
     q = diemitko.prime_gen(size)
     n = p * q
 
-    c = 2
+    c = gmpy2.mpz(2)
     while True:
         legendre_symbol_p = sympy.legendre_symbol(c, p)
         legendre_symbol_q = sympy.legendre_symbol(c, q)
@@ -24,7 +24,7 @@ def gen_keys(
             break
         c += 1
 
-    s = 2
+    s = gmpy2.mpz(2)
     while True:
         jacobi_symbol_s = sympy.jacobi_symbol(s ** 2 - c, n)
         if jacobi_symbol_s == -1 and gmpy2.gcd(s, n) == 1:
@@ -46,8 +46,8 @@ def gen_keys(
 
 def encrypt(
         string: str,
-        other_pub_keys: tuple[int, int, int, int],
-) -> list[tuple[int, int, int]]:
+        other_pub_keys: tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz, gmpy2.mpz],
+) -> list[tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz]]:
     n, c, s, e = other_pub_keys
     blocks = utils.str_to_blocks(string, n)
 
@@ -76,9 +76,9 @@ def encrypt(
 
 
 def decrypt(
-        encrypted_blocks: list[tuple[int, int, int]],
-        private_keys: tuple[int, int, int, int],
-        me_pub_keys: tuple[int, int, int, int]
+        encrypted_blocks: list[tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz]],
+        private_keys: tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz, gmpy2.mpz],
+        me_pub_keys: tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz, gmpy2.mpz]
 ) -> str:
     p, q, m, d = private_keys
     n, c, s, e = me_pub_keys

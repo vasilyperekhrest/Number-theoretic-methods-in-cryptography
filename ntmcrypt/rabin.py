@@ -6,7 +6,7 @@ from ntmcrypt import diemitko
 from ntmcrypt import utils
 
 
-def gen_keys(size: int = 128):
+def gen_keys(size: int = 128) -> tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz]:
     while True:
         p = diemitko.prime_gen(size)
         if p % 4 == 3:
@@ -23,7 +23,7 @@ def gen_keys(size: int = 128):
 def encrypt(
         string: str,
         other_pub_key: gmpy2.mpz
-):
+) -> list[gmpy2.mpz]:
     encrypted_blocks = []
     for block in utils.str_to_blocks(string, other_pub_key):
         encrypted_blocks.append(gmpy2.powmod(block, 2, other_pub_key))
@@ -35,7 +35,7 @@ def decrypt(
         encrypted_blocks: list[gmpy2.mpz],
         p: gmpy2.mpz,
         q: gmpy2.mpz
-):
+) -> str:
     _, a, b = gmpy2.gcdext(p, q)
     n = p * q
 

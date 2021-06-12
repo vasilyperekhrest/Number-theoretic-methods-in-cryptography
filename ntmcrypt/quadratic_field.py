@@ -2,7 +2,7 @@ import gmpy2
 
 
 class Number:
-    def __init__(self, a: int, b: int, c: int):
+    def __init__(self, a: int, b: int, c: int) -> None:
         self.a = a
         self.b = b
         self.c = c
@@ -75,7 +75,7 @@ def divmod(numerator: Number, denominator: Number, m: int) -> Number:
     return Number(numerator.a * reverse_elem, numerator.b * reverse_elem, numerator.c) % m
 
 
-def powmod(num: Number, exp, m):
+def powmod(num: Number, exp, m) -> Number:
     pw_list = [(1, num)]
     pw = 1
     while pw << 1 <= exp:

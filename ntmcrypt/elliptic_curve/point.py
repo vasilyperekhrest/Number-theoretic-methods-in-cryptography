@@ -9,19 +9,26 @@ class Params:
             p: gmpy2.mpz,
             q: gmpy2.mpz
     ) -> None:
+        """
+
+        :param a:
+        :param b:
+        :param p:
+        :param q:
+        """
         self.a = a
         self.b = b
         self.p = p
         self.q = q
 
-    def __str__(self) -> str:
+    def __str__(self):
         return f"Elliptic curve params:\n" \
                f"a = {self.a}\n" \
                f"b = {self.b}\n" \
                f"p = {self.p}\n" \
                f"q = {self.q}\n"
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other):
         if self.a == other.a and \
                 self.b == other.b and \
                 self.p == other.p and \
@@ -30,7 +37,7 @@ class Params:
         else:
             return False
 
-    def __ne__(self, other) -> bool:
+    def __ne__(self, other):
         if self == other:
             return False
         else:
@@ -45,20 +52,31 @@ class Point:
             params: Params,
             at_infinity: bool = False
     ) -> None:
-        self.x: gmpy2.mpz = x
-        self.y: gmpy2.mpz = y
+        """
+
+        :param x:
+        :param y:
+        :param params:
+        :param at_infinity:
+        """
+        self.x = x
+        self.y = y
         # point at infinity or not
-        self.at_infinity: bool = at_infinity
-        self.curve: Params = params
+        self.at_infinity = at_infinity
+        self.curve = params
 
     def inverse(self):
+        """
+
+        :return:
+        """
         y = -self.y % self.curve.p
         return Point(self.x, y, self.curve)
 
     def __neg__(self):
         return self.inverse()
 
-    def __str__(self) -> str:
+    def __str__(self):
         return f"({self.x};{self.y})"
 
     def __add__(self, other):

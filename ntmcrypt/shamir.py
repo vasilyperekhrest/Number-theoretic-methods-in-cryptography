@@ -5,16 +5,16 @@ import gmpy2
 from ntmcrypt import utils
 
 
-def gen_keys(p: gmpy2.mpz):
+def gen_keys(p: gmpy2.mpz) -> tuple[gmpy2.mpz, gmpy2.mpz]:
     phi = p - 1
 
     while True:
-        public_key = random.randint(1, phi)
+        public_key = gmpy2.mpz(random.randint(1, phi))
         d, private_key, b = gmpy2.gcdext(public_key, phi)
         if d == 1:
             break
 
-    return gmpy2.mpz(public_key), private_key
+    return public_key, private_key
 
 
 def encrypt(data: any, key, p) -> list[gmpy2.mpz]:
