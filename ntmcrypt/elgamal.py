@@ -2,12 +2,16 @@ import random
 
 import gmpy2
 
-from ntmcrypt import diemitko
 from ntmcrypt import utils
 
 
 def gen_keys(size: int = 128) -> tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz, gmpy2.mpz]:
-    p = diemitko.prime_gen(size)
+    """Function for generating public and private keys for a user.
+
+    :param size: required number of bits (default 128).
+    :return: User's public and private keys.
+    """
+    p = utils.prime_gen(size)
     phi = p - 1
     g = utils.primitive_root(p)
 
@@ -22,6 +26,11 @@ def gen_keys(size: int = 128) -> tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz, gmpy2.mp
 
 
 def gen_session_key(other_p: gmpy2.mpz) -> gmpy2.mpz:
+    """Function for creating a session key between users.
+
+    :param other_p: the public key of the user to connect to.
+    :return: your session key.
+    """
     phi = other_p - 1
 
     while True:
@@ -39,11 +48,19 @@ def encrypt(
         other_g: gmpy2.mpz,
         other_y: gmpy2.mpz
 ) -> tuple[list[gmpy2.mpz], gmpy2.mpz]:
-    blocks = utils.str_to_blocks(string, other_p)
+    """Data (string) encryption function with El Gamal scheme.
+
+    :param string: the string to encrypt.
+    :param session_key: the session key of the user who is going to encrypt the message.
+    :param other_p: another user's public key p.
+    :param other_g: another user's public key g.
+    :param other_y: another user's public key y.
+    :return: Encrypted blocks and parameter "a".
+    """
     b = gmpy2.powmod(other_y, session_key, other_p)
 
     encrypted_blocks = []
-    for block in blocks:
+    for block in utils.str_to_blocks(string, other_p):
         encrypted_block = gmpy2.f_mod(gmpy2.mul(b, block), other_p)
         encrypted_blocks.append(encrypted_block)
 
@@ -58,6 +75,14 @@ def decrypt(
         p: gmpy2.mpz,
         private_key: gmpy2.mpz
 ) -> str:
+    """Decryption function for data encrypted using El Gamal's scheme.
+
+    :param encrypted_blocks: encrypted blocks.
+    :param a: parameter "a".
+    :param p: your public key p.
+    :param private_key: your private key.
+    :return: decrypted string.
+    """
     m = gmpy2.powmod(a, p - 1 - private_key, p)
 
     decrypted_blocks = []
