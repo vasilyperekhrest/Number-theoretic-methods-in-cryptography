@@ -1,3 +1,9 @@
+# This module contains two classes that are designed to work with an elliptic curve.
+# The Point class is a point on an elliptical curve and contains a copy of the curve
+# parameters to which it belongs. The connection between a point and an elliptic
+# curve is provided using the Params class.
+
+
 import gmpy2
 
 
@@ -9,12 +15,12 @@ class Params:
             p: gmpy2.mpz,
             q: gmpy2.mpz
     ) -> None:
-        """
+        """Elliptic curve parameters.
 
-        :param a:
-        :param b:
-        :param p:
-        :param q:
+        :param a: parameter 'a' of an elliptic curve. (mpz)
+        :param b: parameter 'b' of an elliptic curve. (mpz)
+        :param p: parameter (module) 'p' of an elliptic curve. (mpz)
+        :param q: parameter (group order) 'q' of an elliptic curve. (mpz)
         """
         self.a = a
         self.b = b
@@ -52,12 +58,12 @@ class Point:
             params: Params,
             at_infinity: bool = False
     ) -> None:
-        """
+        """Elliptic curve point.
 
-        :param x:
-        :param y:
-        :param params:
-        :param at_infinity:
+        :param x: x coordinate modulo p
+        :param y: y coordinate modulo p
+        :param params: elliptic curve parameters.
+        :param at_infinity: whether the point is infinity or not.
         """
         self.x = x
         self.y = y
@@ -66,9 +72,9 @@ class Point:
         self.curve = params
 
     def inverse(self):
-        """
+        """A method that returns the inverse of a given point modulo p.
 
-        :return:
+        :return: inverted point modulo p.
         """
         y = -self.y % self.curve.p
         return Point(self.x, y, self.curve)

@@ -1,3 +1,8 @@
+# Методические рекомендации по заданию параметров эллиптических кривых в соответствии с ГОСТ Р 34.10-2012
+# https://files.stroyinf.ru/Data2/1/4293748/4293748841.pdf
+# Parameters: {num: (a, b, p, q)}
+
+
 curves = {
     1: (
         "0x00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"

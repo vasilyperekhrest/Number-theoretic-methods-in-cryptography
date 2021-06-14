@@ -15,12 +15,12 @@ class EllipticCurve:
             p: gmpy2.mpz,
             q: gmpy2.mpz
     ) -> None:
-        """
+        """ An elliptic curve of the form y^2 = x^3 + ax + b
 
-        :param a:
-        :param b:
-        :param p:
-        :param q:
+        :param a: parameter 'a' of an elliptic curve. (mpz)
+        :param b: parameter 'b' of an elliptic curve. (mpz)
+        :param p: parameter (module) 'p' of an elliptic curve. (mpz)
+        :param q: parameter (group order) 'q' of an elliptic curve. (mpz)
         """
         if p < 4 or (4 * gmpy2.powmod(a, 3, p) + 27 * gmpy2.powmod(b, 2, p)) % p == 0:
             raise Exception("Error!\n"
@@ -32,10 +32,10 @@ class EllipticCurve:
         self.q = q
 
     def is_includes_point(self, pnt: Point) -> bool:
-        """
+        """Whether a point belongs to an elliptic curve or not.
 
-        :param pnt:
-        :return:
+        :param pnt: the point to be checked.
+        :return: True or False.
         """
         if pnt.at_infinity:
             return True
@@ -46,9 +46,9 @@ class EllipticCurve:
             return False
 
     def rand_point(self) -> Point:
-        """
+        """Method for generating a random point.
 
-        :return:
+        :return: randomly generated point.
         """
         while True:
             x = gmpy2.mpz(random.randint(1, self.p))
