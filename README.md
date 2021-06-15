@@ -1,6 +1,17 @@
 # Number theoretic methods in cryptography
 Laboratory work on the number-theoretic method in cryptography.
 
+## Dependencies
+
+For this module to work, you need to install certain libraries, namely: sympy and gmpy2. If you want 
+to use this module as a library, you can skip this step, otherwise you need to enter the following 
+command to install:
+
+```zsh
+pip install sympy, gmpy2
+```
+
+
 ## Usage
 There are several use cases:
 
