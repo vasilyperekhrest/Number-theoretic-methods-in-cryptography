@@ -2,18 +2,22 @@ import re
 
 import gmpy2
 
-from ntmcrypt import diemitko
 from ntmcrypt import utils
 
 
 def gen_keys(size: int = 128) -> tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz]:
+    """Function for generating p, q and n = p * q keys of the Rabin cryptosystem.
+
+    :param size: the dimension of prime numbers (in bits).
+    :return: p, q - private key and n - public key
+    """
     while True:
-        p = diemitko.prime_gen(size)
+        p = utils.prime_gen(size)
         if p % 4 == 3:
             break
 
     while True:
-        q = diemitko.prime_gen(size)
+        q = utils.prime_gen(size)
         if q % 4 == 3:
             break
 
@@ -24,6 +28,12 @@ def encrypt(
         string: str,
         other_pub_key: gmpy2.mpz
 ) -> list[gmpy2.mpz]:
+    """Data encryption function (strings) using the Rabin cryptosystem.
+
+    :param string: the string to encrypt.
+    :param other_pub_key: the public key of the user to whom the ciphertext will be sent.
+    :return: list containing encrypted blocks.
+    """
     encrypted_blocks = []
     for block in utils.str_to_blocks(string, other_pub_key):
         encrypted_blocks.append(gmpy2.powmod(block, 2, other_pub_key))
@@ -36,6 +46,13 @@ def decrypt(
         p: gmpy2.mpz,
         q: gmpy2.mpz
 ) -> str:
+    """Function of decryption of data encrypted using the Rabin cryptosystem.
+
+    :param encrypted_blocks: encrypted blocks.
+    :param p: p - your private key.
+    :param q: q - your private key.
+    :return: decrypted string.
+    """
     _, a, b = gmpy2.gcdext(p, q)
     n = p * q
 
