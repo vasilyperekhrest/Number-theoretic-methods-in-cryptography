@@ -1,5 +1,3 @@
-import gmpy2
-
 from ntmcrypt import elgamal_ec
 
 
