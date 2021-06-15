@@ -2,7 +2,6 @@ import gmpy2
 import sympy
 
 from ntmcrypt import quadratic_field as qf
-from ntmcrypt import diemitko
 from ntmcrypt import utils
 
 
@@ -12,8 +11,13 @@ def gen_keys(
     tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz, gmpy2.mpz],
     tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz, gmpy2.mpz]
 ]:
-    p = diemitko.prime_gen(size)
-    q = diemitko.prime_gen(size)
+    """Function for generating public and private keys of the Williams cryptosystem user.
+
+    :param size: the dimension of prime numbers (in bits).
+    :return: private and public keys, where each key consists of 4 elements: (p, q, m, d), (n, c, s, e).
+    """
+    p = utils.prime_gen(size)
+    q = utils.prime_gen(size)
     n = p * q
 
     c = gmpy2.mpz(2)
@@ -33,11 +37,11 @@ def gen_keys(
 
     m = ((p - legendre_symbol_p) >> 1) * ((q - legendre_symbol_q) >> 1)
 
-    d = diemitko.prime_gen(size//2)
+    d = utils.prime_gen(size//2)
     while True:
         if gmpy2.gcd(d, m) == 1:
             break
-        d = diemitko.prime_gen(size//2)
+        d = utils.prime_gen(size//2)
 
     e = ((m + 1) >> 1) * gmpy2.invert(d, m) % m
 
@@ -48,11 +52,16 @@ def encrypt(
         string: str,
         other_pub_keys: tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz, gmpy2.mpz],
 ) -> list[tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz]]:
+    """Data encryption function (string) of the Williams cryptosystem.
+
+    :param string: the string to encrypt.
+    :param other_pub_keys: the public key of the user to whom the ciphertext will be sent.
+    :return: list containing encrypted blocks
+    """
     n, c, s, e = other_pub_keys
-    blocks = utils.str_to_blocks(string, n)
 
     encrypted_blocks = []
-    for block in blocks:
+    for block in utils.str_to_blocks(string, n):
         jacobi_symbol_w = sympy.jacobi_symbol(block ** 2 - c, n)
 
         if jacobi_symbol_w == 1:
@@ -78,10 +87,17 @@ def encrypt(
 def decrypt(
         encrypted_blocks: list[tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz]],
         private_keys: tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz, gmpy2.mpz],
-        me_pub_keys: tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz, gmpy2.mpz]
+        public_keys: tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz, gmpy2.mpz]
 ) -> str:
+    """Function of decryption of data encrypted using the Williams cryptosystem.
+
+    :param encrypted_blocks: encrypted blocks.
+    :param private_keys: your private keys.
+    :param public_keys: your public keys.
+    :return: decrypted string.
+    """
     p, q, m, d = private_keys
-    n, c, s, e = me_pub_keys
+    n, c, s, e = public_keys
 
     decrypted_blocks = []
     for block in encrypted_blocks:
