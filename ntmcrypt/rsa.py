@@ -18,7 +18,7 @@ def gen_keys(size: int = 120) -> tuple[gmpy2.mpz, gmpy2.mpz, gmpy2.mpz]:
     phi = (p-1) * (q-1)
 
     while True:
-        public_key = gmpy2.mpz(random.randint(1, 10**(phi.num_digits() - 1)))
+        public_key = gmpy2.mpz(random.randint(1, phi))
         d, private_key, b = gmpy2.gcdext(public_key, phi)
         if d == 1:
             break
