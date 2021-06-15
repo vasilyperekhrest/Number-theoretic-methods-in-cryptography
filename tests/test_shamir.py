@@ -1,9 +1,9 @@
-from ntmcrypt import diemitko
+from ntmcrypt import utils
 from ntmcrypt import shamir
 
 
 def main():
-    p = diemitko.prime_gen(256)
+    p = utils.prime_gen(256)
     print(f"p = {p}\n")
 
     # A
