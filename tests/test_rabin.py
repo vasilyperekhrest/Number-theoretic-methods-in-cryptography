@@ -1,47 +1,32 @@
+import pytest
+
 from ntmcrypt import rabin
 
 
-def main():
+@pytest.mark.parametrize("message, num_bits_a, num_bits_b",
+                         [("qwerty123", 67, 78),
+                          ("🎶🤪👾✊🏿🧵💫", 467, 235),
+                          ("2319686834234234", 563, 234),
+                          ("Привет, мир!", 222, 768),
+                          ("!№%:,.;()_+-='", 354, 233),
+                          ("Hello (привет), world (мир)", 80, 346)])
+def test_rabin(message, num_bits_a, num_bits_b):
     # A
-    p_a, q_a, pub_a = rabin.gen_keys(256)
-    print(f"User: A\n"
-          f"p = {p_a}\n"
-          f"q = {q_a}\n"
-          f"Public key = {pub_a}\n")
+    p_a, q_a, pub_a = rabin.gen_keys(num_bits_a)
 
     # B
-    p_b, q_b, pub_b = rabin.gen_keys(512)
-    print(f"User: B\n"
-          f"p = {p_b}\n"
-          f"q = {q_b}\n"
-          f"Public key = {pub_b}\n")
+    p_b, q_b, pub_b = rabin.gen_keys(num_bits_b)
 
     # A -> B
-    message = "Hello, world!👨‍💻"
     encrypted_data = rabin.encrypt(message, pub_b)
-    print(f"A -> B\n"
-          f"User A:\n"
-          f"Message = '{message}'\n"
-          f"Encrypted data = {encrypted_data}\n")
 
     # B
     decrypted_message = rabin.decrypt(encrypted_data, p_b, q_b)
-    print(f"User B:\n"
-          f"Decrypted message = {decrypted_message}\n")
+    assert message == decrypted_message
 
     # B -> A
-    message = "Hello, world!👨‍💻"
     encrypted_data = rabin.encrypt(message, pub_a)
-    print(f"B -> A\n"
-          f"User B:\n"
-          f"Message = '{message}'\n"
-          f"Encrypted data = {encrypted_data}\n")
 
     # A
     decrypted_message = rabin.decrypt(encrypted_data, p_a, q_a)
-    print(f"User A:\n"
-          f"Decrypted message = {decrypted_message}\n")
-
-
-if __name__ == '__main__':
-    main()
+    assert message == decrypted_message

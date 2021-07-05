@@ -77,9 +77,9 @@ def encrypt(
         b2 = alpha.a % 2
 
         alpha_e = qf.powmod(alpha, e, n)
-        e = alpha_e.a * gmpy2.invert(alpha_e.b, n) % n
+        data = alpha_e.a * gmpy2.invert(alpha_e.b, n) % n
 
-        encrypted_blocks.append((e, b1, b2))
+        encrypted_blocks.append((data, b1, b2))
 
     return encrypted_blocks
 
@@ -101,9 +101,9 @@ def decrypt(
 
     decrypted_blocks = []
     for block in encrypted_blocks:
-        e, b1, b2 = block
+        data, b1, b2 = block
 
-        alpha_2e = qf.divmod(qf.Number(e, 1, c), qf.Number(e, -1, c), n)
+        alpha_2e = qf.divmod(qf.Number(data, 1, c), qf.Number(data, -1, c), n)
         alpha_2ed = qf.powmod(alpha_2e, d, n)
 
         if (b2 == 1 and alpha_2ed.a % 2 == 0) or (b2 == 0 and alpha_2ed.a % 2 == 1):
@@ -119,6 +119,7 @@ def decrypt(
                         qf.Number(alpha_2ed.a - 1, alpha_2ed.b, alpha_2ed.c),
                         n) * qf.Number(0, 1, alpha_2ed.c) % n
 
+        print(num)
         decrypted_blocks.append((num.a + num.b) % n)
 
     return utils.blocks_to_str(decrypted_blocks)

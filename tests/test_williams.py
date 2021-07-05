@@ -1,45 +1,32 @@
+import pytest
+
 from ntmcrypt import williams
 
 
-def main():
+@pytest.mark.parametrize("message, num_bits_a, num_bits_b",
+                         [("qwerty123", 45, 78),
+                          ("🎶🤪👾✊🏿🧵💫", 467, 235),
+                          ("2319686834234234", 563, 234),
+                          ("Привет, мир!", 222, 768),
+                          ("!№%:,.;()_+-='", 354, 233),
+                          ("Hello (привет), world (мир)", 22, 346)])
+def test_williams(message, num_bits_a, num_bits_b):
     # A
-    pr_a, pub_a = williams.gen_keys(256)
-    print(f"User: A\n"
-          f"Private key = {pr_a}\n"
-          f"Public key = {pub_a}\n")
+    pr_a, pub_a = williams.gen_keys(num_bits_a)
 
     # B
-    pr_b, pub_b = williams.gen_keys(512)
-    print(f"User: B\n"
-          f"Private key = {pr_b}\n"
-          f"Public key = {pub_b}\n")
+    pr_b, pub_b = williams.gen_keys(num_bits_b)
 
     # A -> B
-    message = "Hello, world!👨‍💻"
     encrypted_data = williams.encrypt(message, pub_b)
-    print(f"A -> B\n"
-          f"User A:\n"
-          f"Message = '{message}'\n"
-          f"Encrypted data = {encrypted_data}\n")
 
     # B
     decrypted_message = williams.decrypt(encrypted_data, pr_b, pub_b)
-    print(f"User B:\n"
-          f"Decrypted message = {decrypted_message}\n")
+    assert message == decrypted_message
 
     # B -> A
-    message = "Hello, world!👨‍💻"
     encrypted_data = williams.encrypt(message, pub_a)
-    print(f"B -> A\n"
-          f"User B:\n"
-          f"Message = '{message}'\n"
-          f"Encrypted data = {encrypted_data}\n")
 
     # A
     decrypted_message = williams.decrypt(encrypted_data, pr_a, pub_a)
-    print(f"User A:\n"
-          f"Decrypted message = {decrypted_message}\n")
-
-
-if __name__ == '__main__':
-    main()
+    assert message == decrypted_message

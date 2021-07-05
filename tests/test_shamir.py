@@ -1,9 +1,18 @@
+import pytest
+
 from ntmcrypt import utils
 from ntmcrypt import shamir
 
 
-def main():
-    p = utils.prime_gen(256)
+@pytest.mark.parametrize("message, num_bits",
+                         [("qwerty123", 45),
+                          ("🎶🤪👾✊🏿🧵💫", 467),
+                          ("2319686834234234", 563),
+                          ("Привет, мир!", 222),
+                          ("!№%:,.;()_+-='", 354),
+                          ("Hello (привет), world (мир)", 22)])
+def test_shamir(message, num_bits):
+    p = utils.prime_gen(num_bits)
     print(f"p = {p}\n")
 
     # A
@@ -19,55 +28,29 @@ def main():
           f"Private key = {pr_b}\n")
 
     # A -> B
-    message = "Hello, world!👨‍💻"
-
     # A
     encrypted_data = shamir.encrypt(message, pub_a, p)
-    print(f"A -> B\n"
-          f"User A:\n"
-          f"Message = '{message}'\n"
-          f"Encrypted data = {encrypted_data}\n")
 
     # B
     encrypted_data = shamir.encrypt(encrypted_data, pub_b, p)
-    print(f"User B:\n"
-          f"Encrypted data = {encrypted_data}\n")
 
     # A
     encrypted_data = shamir.encrypt(encrypted_data, pr_a, p)
-    print(f"User A:\n"
-          f"Encrypted data = {encrypted_data}\n")
 
     # B
     decrypted_message = shamir.decrypt(encrypted_data, pr_b, p)
-    print(f"User B:\n"
-          f"Decrypted message = {decrypted_message}\n")
+    assert message == decrypted_message
 
     # B -> A
-    message = "Hello, world!👨‍💻"
-
     # B
     encrypted_data = shamir.encrypt(message, pub_b, p)
-    print(f"B -> A\n"
-          f"User B:\n"
-          f"Message = '{message}'\n"
-          f"Encrypted data = {encrypted_data}\n")
 
     # A
     encrypted_data = shamir.encrypt(encrypted_data, pub_a, p)
-    print(f"User A:\n"
-          f"Encrypted data = {encrypted_data}\n")
 
     # B
     encrypted_data = shamir.encrypt(encrypted_data, pr_b, p)
-    print(f"User B:\n"
-          f"Encrypted data = {encrypted_data}\n")
 
     # A
     decrypted_message = shamir.decrypt(encrypted_data, pr_a, p)
-    print(f"User A:\n"
-          f"Decrypted message = {decrypted_message}\n")
-
-
-if __name__ == '__main__':
-    main()
+    assert message == decrypted_message
