@@ -29,13 +29,20 @@ There are several use cases:
     git clone https://github.com/vasilyperekhrest/Number-theoretic-methods-in-cryptography.git
     ```
 
-    Next, you need to go to the folder with the project and run the __setup.py__ script:
+    Next, go to the project folder and install all the dependencies using the following commands:
 
     ```zsh
     cd Number-theoretic-methods-in-cryptography/
-    python setup.py sdist
+    poetry install
     ```
+   
+    After all the dependencies are installed, start the virtual environment and build the library:
     
+    ```zsh
+    poetry shell
+    poetry build
+    ```
+
     After executing the script, the **dist** folder will appear, in which the library will be located. 
     The next step is to install the library and all its dependencies:
     
